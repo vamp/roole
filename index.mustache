@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Roole</title>
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:300">
+	<link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+<header id="header">
+	<h1 id="logo"><img src="img/logo.png" alt="Roole - A language that compiles to CSS"></h1>
+
+	<nav id="nav">
+		<ul>
+			<li>
+				<a href="#toc">Table of Contents</a>
+				<ul id="toc" class="hidden">
+					<li><a href="#">Home</a></li>
+					{{#top_heading}}
+					<li><a href="#{{id}}">{{content}}</a></li>
+					{{/top_heading}}
+					<li class="separator"><span class="menu-separator-text">Language</span></li>
+					{{#language_heading}}
+					<li><a href="#{{id}}">{{content}}</a></li>
+					{{/language_heading}}
+				</ul>
+			</li>
+			<li class="opposite"><a href="#editor">Live Editor</a></li>
+		</ul>
+	</nav>
+
+	<p><a id="download-button" href="dist/roole-{{version}}.min.js">Download Roole <span id="version">{{version}}</span></a></p>
+	<p><a id="fork-button" href="https://github.com/curvedmark/roole">or Fork Roole on GitHub</a></p>
+</header>
+
+<article id="editor" class="hidden">
+	<h1 class="hidden">Live Editor</h1>
+	<div class="content">
+		<form action="#" class="input">
+			<textarea>body
+	margin: 0</textarea>
+		</form>
+<div class="output">
+			<div class="error hidden"><span class="arrow"></span><span class="content"></span></div>
+		</div>
+	</div>
+	<div class="resizer"></div>
+</article>
+
+<div id="main">
+{{#main}}
+	{{#heading}}
+	<h{{level}}>{{#id}}<a id="{{value}}" class="bookmark"></a>{{/id}}{{&content}}</h{{level}}>
+	{{/heading}}
+	{{#snippet}}
+	<figure class="snippet">
+			{{#input}}
+			<div class="input cm-s-tomorrow{{#lang}} lang-{{value}}{{/lang}}">
+				{{#imports}}
+				<div class="file">
+					<div class="name">{{name}}</div>
+					<pre><code>{{&content}}</code></pre>
+				</div>
+				{{/imports}}
+				<pre><code>{{&content}}</code></pre>
+			</div>
+			{{/input}}
+			{{#output}}
+			<div class="output cm-s-tomorrow{{#lang}} lang-{{value}}{{/lang}}">
+				<pre><samp>{{&content}}</samp></pre>
+			</div>
+			{{/output}}
+			{{#content}}
+			<pre class="cm-s-tomorrow{{#lang}} lang-{{value}}{{/lang}}"><code>{{&value}}</code></pre>
+			{{/content}}
+	</figure>
+	{{/snippet}}
+	{{#element}}
+	<{{tag}}>{{&content}}</{{tag}}>
+	{{/element}}
+	{{#info}}
+	<p class="info">{{&content}}</p>
+	{{/info}}
+	{{#warning}}
+	<p class="warning">{{&content}}</p>
+	{{/warning}}
+{{/main}}
+</div>
+
+<footer id="footer">
+	<div class="opposite">&copy; 2013 Glen Huang</div>
+	<div>
+		If Roole has been helpful, please consider
+		<form id="donate" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="YC2E5NSUKL46L">
+			<input id="donate-button" type="submit" value="buying me a pizza">
+		</form>
+		:)
+	</div>
+</footer>
+
+<script src="dist/roole-{{version}}.min.js"></script>
+<script src="script/script.js"></script>
+</body>
+</html>

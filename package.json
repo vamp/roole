@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "roole-doc",
+  "version": "0.0.0",
+  "dependencies": {
+    "bower": "~0.6.8",
+    "jsdom": "~0.3.4",
+    "marked": "~0.2.7",
+    "mustache": "~0.7.2"
+  }
+}
