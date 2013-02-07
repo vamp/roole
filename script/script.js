@@ -5433,10 +5433,13 @@ CodeMirror.defineMode('roole', function(config) {
 
 	function tokenBase(stream, state) {
 		if (stream.match(/^\$-?\w[-\w]*/)) {
-			if (stream.match(/^\s*\??=/, false))
-				state.tokenize.push(tokenAssignment)
-			else if (stream.peek() === '(')
-				state.tokenize.push(tokenArguments)
+			var tokenize = state.tokenize[state.tokenize.length - 1]
+			if (tokenize !== tokenSelector) {
+				if (stream.match(/^\s*\??=/, false))
+					state.tokenize.push(tokenAssignment)
+				else if (stream.peek() === '(')
+					state.tokenize.push(tokenArguments)
+			}
 			return 'variable'
 		}
 
@@ -5658,7 +5661,7 @@ CodeMirror.defineMode('roole', function(config) {
 	}
 
 	function tokenFor(stream, state) {
-		if (stream.match(/^by/)) {
+		if (stream.match(/^by/i)) {
 			state.tokenize.push(tokenExpressionUntilIn)
 			return 'at-rule'
 		}
