@@ -73,10 +73,5 @@ dist:
 
 clean:
 	cd roole && $(MAKE) clean
-	rm -rf \
-		style/style.css \
-		script/script.js \
-		dist \
-		index.html
 
 .PHONY: roole doc release clean
