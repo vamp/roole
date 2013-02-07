@@ -202,7 +202,7 @@ If a rule set has multiple selectors, commas `,` between them can also be replac
 
 <hr>
 
-If a property has multiple values, commas , between them can be replaced with new lines too, when they are indented:
+If a property has multiple values, commas `,` between them can be replaced with new lines too, when they are indented:
 
 ```
 body
