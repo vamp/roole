@@ -21,19 +21,14 @@ DOC_JS_FILES = \
 	script/toc.js \
 	script/editor.js
 
-VERSION = $(shell node -e "console.log(require('./roole/package.json').version)")
-
-RELEASE_FILE = dist/roole-$(VERSION).js
-RELEASE_MIN_FILE = dist/roole-$(VERSION).min.js
-
 doc: roole release script/script.js style/style.css index.html
 
-release: $(RELEASE_FILE) $(RELEASE_MIN_FILE)
+release: dist/roole.js dist/roole.min.js
 
-$(RELEASE_FILE): roole/dist/roole.js | dist
+dist/roole.js: roole/dist/roole.js | dist
 	cp -f $< $@
 
-$(RELEASE_MIN_FILE): roole/dist/roole.min.js | dist
+dist/roole.min.js: roole/dist/roole.min.js | dist
 	cp -f $< $@
 
 roole:

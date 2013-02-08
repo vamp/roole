@@ -24,6 +24,7 @@ Store repeating values in variables:
 
 ```roole
 $pos = left
+
 #sidebar
 	float: $pos
 	margin-$pos: 20px

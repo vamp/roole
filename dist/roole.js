@@ -1,5 +1,5 @@
 /*
- * Roole - The missing CSS preprocessor v0.1.0
+ * Roole - The missing CSS preprocessor v0.1.1
  * http://roole.org
  *
  * Copyright 2012 Glen Huang
@@ -9727,7 +9727,7 @@ roole.compile = function(input, options, callback) {
 	})
 }
 
-roole.version = '0.1.0'
+roole.version = '0.1.1'
 
 return roole
 
