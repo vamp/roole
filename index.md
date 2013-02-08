@@ -481,7 +481,7 @@ Use `\$` to escape variables inside strings:
 
 <hr>
 
-Wrap the variable in curly braces `{}` to seperate characters come after it, which will otherwise be part of its name:
+Wrap the variable in curly braces `{}` to seperate characters come after it, which would otherwise be part of its name:
 
 ```roole
 $chapter = 4
@@ -554,7 +554,7 @@ body
 
 <hr>
 
-At lease one space should exist on the right side of `+`(`-`), otherwise unary `+`(`-`) is applied:
+At lease one space should exist on the right side of `+`(`-`), or no space exists on both side, otherwise unary `+`(`-`) is applied:
 
 ```roole
 #box
