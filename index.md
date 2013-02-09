@@ -7,8 +7,6 @@ The most unique feature of Roole is that it has vendor prefixing built-in, so th
 
 Roole is implemented in JavaScript, so it can be run both on the server side (via [node.js](http://nodejs.org/)) or in a browser.
 
-INFO: Roole will be able to run in old browsers like IE6 in a future version.
-
 ## Overview
 
 Indentations represents curly braces `{}`:
@@ -73,7 +71,7 @@ $button = @mixin $color, $bg-color
 
 <hr>
 
-Or simplely extend already defined rules:
+Or simply extend already defined rules:
 
 ```roole
 .button
@@ -126,10 +124,10 @@ Insert the downloaded file into HTML:
 Compile a single file:
 
 ```
-roole /path/to/style.roo /path/to/style.css
+roole /path/to/style.roo
 ```
 
-For more usage on the `roole` command, please run `roole -h` to see.
+For more usage on the `roole` command, please run `roole -h`.
 
 ### Browser
 
@@ -318,7 +316,7 @@ Single-line commnets `//` are removed from the CSS output, while multi-line comm
 	display: inline
 ```
 
-WARNING: Multi-line commnets are currently only allowed at the top level, e.g., it's a syntax error to insert a multi-line comment inside a rule set.
+WARNING: Multi-line commnets are currently only allowed at the top level, e.g., it's a syntax error to insert one inside a rule set.
 
 ### Variable
 
@@ -843,7 +841,7 @@ $button = @mixin $color, $bg-color, $size
 
 ### @extend
 
-`@extend` extends other rulesets of the matching selectors:
+`@extend` extends other rule sets of the matching selectors:
 
 ```roole
 .button
