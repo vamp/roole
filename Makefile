@@ -21,7 +21,7 @@ DOC_JS_FILES = \
 	script/toc.js \
 	script/editor.js
 
-doc: roole release script/script.js style/style.css index.html
+doc: roole release script/script.js style/style.css index.html test
 
 release: dist/roole.js dist/roole.min.js
 
@@ -41,10 +41,10 @@ style/style.css: roole/bin/roole $(DOC_CSS_FILES) $(DOC_ROO_FILES)
 script/script.js: $(DOC_JS_FILES)
 	awk 'FNR==1{print ""}1' $(DOC_JS_FILES) >$@
 
-roole/dist/roole.js:
+roole/dist/roole.js: .FORCE
 	cd roole && $(MAKE) roole
 
-roole/dist/roole.min.js:
+roole/dist/roole.min.js: .FORCE
 	cd roole && $(MAKE) min
 
 index.html: \
@@ -57,8 +57,25 @@ index.html: \
 
 	$< --breaks --lang-prefix '' $(word 2,$^) | $(word 3,$^) | $(word 4,$^) $(word 5,$^) >$@
 
+test: test/test.js test/index.html test/mocha.css test/mocha.js
+
+test/test.js: roole/test/test.js
+	cp -f $< $@
+
+roole/test/test.js: .FORCE
+	cd roole && make browser-test
+
+test/index.html: roole/test/index.html
+	sed -e 's%../node_modules/mocha/%%' $< >$@
+
+test/mocha.%: roole/node_modules/mocha/mocha.%
+	cp -f $< $@
+
 node_modules/%:
 	npm install
+
+roole/node_modules/%:
+	cd roole && npm install
 
 components/%: node_modules/.bin/bower
 	$< install
@@ -68,5 +85,7 @@ dist:
 
 clean:
 	cd roole && $(MAKE) clean
+
+.FORCE:
 
 .PHONY: roole doc release clean
