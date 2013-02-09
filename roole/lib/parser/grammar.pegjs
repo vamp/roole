@@ -164,7 +164,6 @@ ruleList
 rule
 	= ruleset
 	/ properties
-	/ property
 	/ assignment
 	/ extend
 	/ media
@@ -177,10 +176,13 @@ rule
 	/ keyframes
 
 properties
-	= first:property rest:(_ ';' _ p:property {return p})+ {
+	= first:property rest:(_ semicolon _ p:property {return p})* semicolon? {
 		rest.unshift(first)
 		return rest
 	}
+
+semicolon
+	= ';' (_ ';')*
 
 property
 	= star:'*'? name:identifier _ ':' _ value:expression _ priority:'!important'? {
@@ -269,8 +271,8 @@ relationalExpression
 	}
 
 range
-	= from:additiveExpression _ '..' exclusive:'.'? _ to:additiveExpression {
-		return N('range', [from, to], {exclusive: !!exclusive})
+	= from:additiveExpression _ operator:$('..' '.'?) _ to:additiveExpression {
+		return N('range', [from, operator, to])
 	}
 	/ additiveExpression
 
