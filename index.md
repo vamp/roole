@@ -21,11 +21,11 @@ body
 Store repeating values in variables:
 
 ```roole
-$pos = left
+$position = left
 
 #sidebar
-	float: $pos
-	margin-$pos: 20px
+	float: $position
+	margin-$position: 20px
 ```
 
 <hr>
