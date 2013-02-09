@@ -31,8 +31,9 @@ dist/roole.js: roole/dist/roole.js | dist
 dist/roole.min.js: roole/dist/roole.min.js | dist
 	cp -f $< $@
 
+LATEST_TAG = $(shell git tag | git tag | tail -n1)
 roole:
-	git merge -s subtree master -m 'subtree merge master branch into roole folder'
+	git merge -s subtree $(LATEST_TAG) -m 'subtree merge master branch into roole folder'
 
 style/style.css: roole/bin/roole $(DOC_CSS_FILES) $(DOC_ROO_FILES)
 	cat $(DOC_CSS_FILES) >$@
