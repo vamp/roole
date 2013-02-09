@@ -265,22 +265,6 @@ test('!important', function() {
   return assert.compileTo('body\n	width: auto !important', 'body {\n	width: auto !important;\n}');
 });
 
-test('with trailing ;', function() {
-  return assert.compileTo('body\n	margin: 0; padding: 0;', 'body {\n	margin: 0;\n	padding: 0;\n}');
-});
-
-test('with multiple trailing ;', function() {
-  return assert.compileTo('body\n	margin: 0;; padding: 0', 'body {\n	margin: 0;\n	padding: 0;\n}');
-});
-
-test('with multiple trailing ; interspersed with spaces', function() {
-  return assert.compileTo('body\n	margin: 0; ; padding: 0; ;  ;', 'body {\n	margin: 0;\n	padding: 0;\n}');
-});
-
-test('with trailing ; and !important', function() {
-  return assert.compileTo('body\n	margin: 0 !important; padding: 0;', 'body {\n	margin: 0 !important;\n	padding: 0;\n}');
-});
-
 suite('ruleset');
 
 test('remove empty ruleset', function() {
@@ -841,10 +825,6 @@ test('isnt, true', function() {
 
 test('isnt, false', function() {
   return assert.compileTo('body\n	-foo: 1 isnt 1', 'body {\n	-foo: false;\n}');
-});
-
-test('inclusive range isnt exclusive range', function() {
-  return assert.compileTo('body\n	-foo: 1..2 isnt 1...2', 'body {\n	-foo: true;\n}');
 });
 
 suite('logical');
