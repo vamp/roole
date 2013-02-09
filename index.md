@@ -5,7 +5,7 @@ It drew many inspirations from other CSS preprocessing languages like [Sass](htt
 
 The most unique feature of Roole is that it has vendor prefixing built-in, so the language stays dead simple yet being able to prefix some extremely complex rules transparently.
 
-Roole is implemented in JavaScript, so it can be run both on the server side (via [node.js](http://nodejs.org/)) or in a browser ([run unit tests](test) to check if Roole works in your browser).
+Roole is implemented in JavaScript, so it can be run both on the server side (via [node.js](http://nodejs.org/)) or in a browser ([run unit tests](test/) to check if Roole works in your browser).
 
 ## Overview
 
