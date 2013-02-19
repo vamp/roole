@@ -13,7 +13,7 @@ assert.compileTo = function(imports, input, css) {
 
 	var options = {
 		imports: imports,
-		showInput: true
+		prettyError: true
 	}
 
 	roole.compile(input, options, function(error, output) {

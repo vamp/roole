@@ -1,17 +1,16 @@
 /*
- * Roole - The missing CSS preprocessor v0.1.2
+ * Roole - A language that compiles to CSS v0.2.0
  * http://roole.org
  *
  * Copyright 2012 Glen Huang
  * Released under the MIT license
- * http://roole.org/license
  */
 var roole = (function() {
 
 /**
  * Helper
  *
- * A collection of functions used by other modules
+ * A collection of general utility functions used by other modules.
  */
 'use strict'
 
@@ -79,19 +78,31 @@ _.normalizePath = function (path) {
 	return parts.join('/')
 }
 
+/**
+ * Err
+ *
+ * Thin wrapper around Error to add meta info to the error instance.
+ */
 var Err = function(message, node, filePath) {
 	var error = new Error(message)
+
 	try {
-	error.line = node.loc.line
-	error.column = node.loc.column
-	error.offset = node.loc.offset
-	error.filePath = filePath
-} catch (error) {
-	console.error(node)
-}
+		error.line = node.loc.line
+		error.column = node.loc.column
+		error.offset = node.loc.offset
+		error.filePath = filePath
+	} catch (error) {
+		console.error(node)
+	}
+
 	return error
 }
 
+/**
+ * Node
+ *
+ * A collection of node utility functions.
+ */
 var Node = function(type, children, properties) {
 	if (!Array.isArray(children)) {
 		properties = children
@@ -231,7 +242,7 @@ Node.toListNode = function(rangeNode) {
 /**
  * Generated Parser
  *
- * This module parses the input code
+ * Parse the input code.
  */
 var generatedParser = (function(){
   /*
@@ -4813,7 +4824,7 @@ var generatedParser = (function(){
         if (r0 !== null) {
           reportedPos = r1;
           r0 = (function(value) {
-        		return N('variable', [value.toLowerCase()])
+        		return N('variable', [value])
         	})(r4);
         }
         if (r0 === null) {
@@ -7751,10 +7762,10 @@ parser.parse = function(input, options) {
 /**
  * Visitor
  *
- * This module visits each node in the ast.
+ * Visit each node in the ast.
  *
- * Other modules are expected to have this module in their prototype chain
- * in order to inherit its methods.
+ * Other modules are expected to have Visitor.prototype in their prototype chain
+ * to inherit its methods.
  */
 var Visitor = function() {}
 
@@ -7816,14 +7827,34 @@ Visitor.prototype.visitNode = function(node) {
 
 var loader = {}
 
-loader.load = function() {
+loader.load = function(url, callback) {
+	var xhr = new XMLHttpRequest()
 
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState !== 4)
+			return
+
+		if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)
+			callback(null, xhr.responseText)
+		else
+			callback(new Error('Failed to request file ' + url + ': ' + xhr.status))
+	}
+
+	// disable cache
+	url += (~url.indexOf('?') ? '&' : '?') + '_=' + Date.now()
+
+	try {
+		xhr.open('GET', url, true)
+		xhr.send(null)
+	} catch (error) {
+		callback(error)
+	}
 }
 
 /**
  * Importer
  *
- * Import files specified in the import nodes
+ * Import files specified in the import nodes.
  */
 var Importer = function() {}
 
@@ -7831,7 +7862,7 @@ Importer.prototype = new Visitor()
 Importer.prototype.constructor = Importer
 
 Importer.prototype.import = function(ast, options, callback) {
-	this.imports = options.imports || {}
+	this.imports = options.imports || (options.imports = {})
 	this.imported = {}
 	this.ast = ast
 	this.callback = callback
@@ -7897,7 +7928,6 @@ Importer.prototype.visitImport = function(importNode) {
 		return this.visit(ast)
 	}
 
-	this.imports[filePath] = content
 	++this.importing
 
 	var callback = this.callback
@@ -7908,6 +7938,7 @@ Importer.prototype.visitImport = function(importNode) {
 			return callback(error)
 
 		try {
+			that.imports[filePath] = content
 			var ast = parser.parse(content, {filePath: filePath})
 			that.visit(ast)
 		} catch (error) {
@@ -7933,9 +7964,8 @@ importer.import = function(ast, options, callback) {
 /**
  * Scope
  *
- * This module regulates lexical scoping.
+ * Regulate lexical scoping.
  */
-
 var Scope = function() {
 	this.scopes = [{}]
 }
@@ -7949,10 +7979,13 @@ Scope.prototype.remove = function() {
 }
 
 Scope.prototype.define = function(name, value) {
+	name = name.toLowerCase()
 	this.scopes[this.scopes.length - 1][name] = value
 }
 
 Scope.prototype.resolve = function(name) {
+	name = name.toLowerCase()
+
 	var length = this.scopes.length
 	var value
 
@@ -7966,7 +7999,7 @@ Scope.prototype.resolve = function(name) {
 /**
  * Evaluator
  *
- * It eliminates dynamic constructs (variable, @if, @for, etc) of the language
+ * Eliminate dynamic constructs (e.g., variable, @if, @for).
  */
 var Evaluator = function() {}
 
@@ -8585,7 +8618,7 @@ evaluator.evaluate = function(ast, options) {
  * Extender
  *
  * Join nested selectors and media queries, and extend selectors
- * specified in extend nodes
+ * specified in extend nodes.
  */
 var Extender = function() {}
 
@@ -8770,8 +8803,8 @@ Extender.prototype.visitVoid = function(voidNode) {
 /**
  * Media Filter
  *
- * Find `@media` nodes existing before the passed `@extend` node
- * and matching the passed media query list node
+ * Find media nodes existing before the passed extend node
+ * and matching the passed media query list node.
  */
 var MediaFilter = function() {}
 
@@ -8819,8 +8852,8 @@ MediaFilter.prototype.visitMedia = function(mediaNode) {
 /**
  * Media Filter
  *
- * Find `ruleset` nodes existing before the passed `extend` node
- * and matching the passed `selector` node
+ * Find ruleset nodes existing before the passed extend node
+ * and matching the passed selector node
  */
 var RulesetFilter = function() {}
 
@@ -8959,7 +8992,7 @@ extender.extend = function(ast, options) {
 /**
  * Normalizer
  *
- * It removes empty ruleset nodes, empty media nodes, unextended void nodes, etc
+ * Remove empty ruleset/media nodes, unextended void nodes, etc.
  */
 var Normalizer = function() {}
 
@@ -9121,6 +9154,8 @@ normalizer.normalize = function(ast, options) {
 
 /**
  * Prefixer
+ *
+ * Prefix property nodes, keyframes nodes, etc
  */
 var Prefixer = function() {}
 
@@ -9146,6 +9181,11 @@ Prefixer.prototype.visitRuleList = Prefixer.prototype.visitNode
 
 Prefixer.prototype.visitNode = _.noop
 
+/**
+ * PropertyNamePrefixer
+ *
+ * Prefix property name
+ */
 var PropertyNamePrefixer = function() {}
 
 PropertyNamePrefixer.prototype = new Visitor()
@@ -9190,6 +9230,11 @@ PropertyNamePrefixer.prototype.visitIdentifier = function(identifierNode) {
 	return prefixedPropertyNameNodes
 }
 
+/**
+ * LinearGradientPrefixer
+ *
+ * Visit property value nodes to prefix linear-gradient()
+ */
 var LinearGradientPrefixer = function() {}
 
 LinearGradientPrefixer.stop = {}
@@ -9352,7 +9397,7 @@ prefixer.prefix = function(ast, options) {
 /**
  * Compiler
  *
- * This module compiles ast to css
+ * Compile ast to css.
  */
 var Compiler = function() {}
 
@@ -9622,6 +9667,11 @@ compiler.compile = function(ast, options) {
 	return new Compiler().compile(ast, options)
 }
 
+/**
+ * Formmatter
+ *
+ * Make error message contain input context
+ */
 var formatter = {}
 
 formatter.format = function(error, input) {
@@ -9673,7 +9723,7 @@ formatter.format = function(error, input) {
 /**
  * Roole
  *
- * This module exposes public APIs.
+ * Expose public APIs.
  */
 var roole = {}
 
@@ -9685,11 +9735,11 @@ roole.compile = function(input, options, callback) {
 		options = {}
 	}
 
-	if (options.showInput) {
+	if (options.prettyError) {
 		var _callback = callback
 		callback = function(error, ast) {
 			if (error && error.line) {
-				if (error.filePath)
+				if (error.filePath && options.imports)
 					input = options.imports[error.filePath]
 
 				error.message = formatter.format(error, input)
@@ -9727,7 +9777,71 @@ roole.compile = function(input, options, callback) {
 	})
 }
 
-roole.version = '0.1.2'
+/**
+ * Compile style and link elements in the HTML
+ */
+var selector = 'link[rel="stylesheet/roole"],style[type="text/roole"]'
+var elements = document.querySelectorAll(selector)
+
+Array.prototype.forEach.call(elements, function(element) {
+	var styleElement = document.createElement('style')
+	document.head.appendChild(styleElement)
+
+	var options = {
+		prettyError: true
+	}
+
+	if (element.nodeName === 'STYLE') {
+		roole.compile(element.textContent, options, function(error, css) {
+			if (error) {
+				displayError(error.message)
+				throw error
+			}
+
+			styleElement.textContent = css
+		})
+	} else if (element.nodeName === 'LINK') {
+		var url = element.getAttribute('href')
+		loader.load(url, function(error, content) {
+			if (error) {
+				displayError(error.message)
+				throw error
+			}
+
+			options.filePath = url
+			roole.compile(content, options, function(error, css) {
+				if (error) {
+					displayError(error.message)
+					throw error
+				}
+
+				styleElement.textContent = css
+			})
+		})
+	}
+})
+
+function displayError(message) {
+	var errorElement = document.createElement('pre')
+	var style = [
+		['font', '14px/1.25 Menlo,Monaco,Consolas,"Lucida Console",monospace'],
+		['border', '3px solid #f60f92'],
+		['color', '#000'],
+		['background-color', '#ffeff4'],
+		['padding', '1em'],
+		['margin', '0'],
+		['position', 'fixed'],
+		['top', '0'],
+		['left', '0'],
+		['right', '0'],
+		['z-index', '99999999']
+	].map(function(property) { return property[0] + ':' + property[1] }).join(';')
+	errorElement.setAttribute('style', style)
+	errorElement.textContent = message
+	document.body.appendChild(errorElement)
+}
+
+roole.version = '0.2.0'
 
 return roole
 

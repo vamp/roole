@@ -3,8 +3,8 @@ DOC_CSS_FILES = \
 	components/codemirror/lib/codemirror.css
 
 DOC_ROO_FILES = \
-	style/var.roo\
-	style/font.roo\
+	style/var.roo \
+	style/font.roo \
 	style/nav.roo \
 	style/toc.roo \
 	style/download-button.roo \
@@ -37,7 +37,7 @@ roole:
 
 style/style.css: roole/bin/roole $(DOC_CSS_FILES) $(DOC_ROO_FILES)
 	cat $(DOC_CSS_FILES) >$@
-	roole/bin/roole $(DOC_ROO_FILES) >>$@
+	roole/bin/roole -p $(DOC_ROO_FILES) >>$@
 
 script/script.js: $(DOC_JS_FILES)
 	awk 'FNR==1{print ""}1' $(DOC_JS_FILES) >$@
@@ -50,9 +50,11 @@ roole/dist/roole.min.js: .FORCE
 
 index.html: \
 	node_modules/.bin/marked \
-	index.md build/parse-index \
+	index.md \
+	build/parse-index \
 	roole/build/mustache \
 	index.mustache \
+	roole/package.json \
 	build/css-mode.js \
 	build/roole-mode.js
 
