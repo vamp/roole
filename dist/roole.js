@@ -1,5 +1,5 @@
 /*
- * Roole - A language that compiles to CSS v0.2.0
+ * Roole - A language that compiles to CSS v0.2.1
  * http://roole.org
  *
  * Copyright 2012 Glen Huang
@@ -7827,7 +7827,7 @@ Visitor.prototype.visitNode = function(node) {
 
 var loader = {}
 
-loader.load = function(url, callback) {
+loader.load = function(url, callback, context) {
 	var xhr = new XMLHttpRequest()
 
 	xhr.onreadystatechange = function() {
@@ -7835,9 +7835,9 @@ loader.load = function(url, callback) {
 			return
 
 		if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)
-			callback(null, xhr.responseText)
+			callback.call(context, null, xhr.responseText)
 		else
-			callback(new Error('Failed to request file ' + url + ': ' + xhr.status))
+			callback.call(context, new Error('Failed to request file ' + url + ': ' + xhr.status))
 	}
 
 	// disable cache
@@ -7847,7 +7847,7 @@ loader.load = function(url, callback) {
 		xhr.open('GET', url, true)
 		xhr.send(null)
 	} catch (error) {
-		callback(error)
+		callback.call(context, error)
 	}
 }
 
@@ -7932,16 +7932,21 @@ Importer.prototype.visitImport = function(importNode) {
 
 	var callback = this.callback
 
-	var that = this
 	loader.load(filePath, function(error, content) {
-		if (error)
+		if (this.hasError)
+			return
+
+		if (error) {
+			this.hasError = true
 			return callback(error)
+		}
 
 		try {
-			that.imports[filePath] = content
+			this.imports[filePath] = content
 			var ast = parser.parse(content, {filePath: filePath})
-			that.visit(ast)
+			this.visit(ast)
 		} catch (error) {
+			this.hasError = true
 			return callback(error)
 		}
 
@@ -7950,9 +7955,9 @@ Importer.prototype.visitImport = function(importNode) {
 				importNode[key] = ast[key]
 		}
 
-		if (!--that.importing)
-			callback(null, that.ast)
-	})
+		if (!--this.importing)
+			callback(null, this.ast)
+	}, this)
 }
 
 var importer = {}
@@ -9841,7 +9846,7 @@ function displayError(message) {
 	document.body.appendChild(errorElement)
 }
 
-roole.version = '0.2.0'
+roole.version = '0.2.1'
 
 return roole
 

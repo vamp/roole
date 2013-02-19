@@ -257,7 +257,7 @@ test('mixed-line properties', function() {
   return assert.compileTo('body\n	width: auto; height: auto\n	float: left', 'body {\n	width: auto;\n	height: auto;\n	float: left;\n}');
 });
 
-test('started property', function() {
+test('starred property', function() {
   return assert.compileTo('body\n	*zoom: 1', 'body {\n	*zoom: 1;\n}');
 });
 
