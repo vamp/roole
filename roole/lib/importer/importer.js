@@ -86,16 +86,21 @@ Importer.prototype.visitImport = function(importNode) {
 
 	var callback = this.callback
 
-	var that = this
 	loader.load(filePath, function(error, content) {
-		if (error)
+		if (this.hasError)
+			return
+
+		if (error) {
+			this.hasError = true
 			return callback(error)
+		}
 
 		try {
-			that.imports[filePath] = content
+			this.imports[filePath] = content
 			var ast = parser.parse(content, {filePath: filePath})
-			that.visit(ast)
+			this.visit(ast)
 		} catch (error) {
+			this.hasError = true
 			return callback(error)
 		}
 
@@ -104,7 +109,7 @@ Importer.prototype.visitImport = function(importNode) {
 				importNode[key] = ast[key]
 		}
 
-		if (!--that.importing)
-			callback(null, that.ast)
-	})
+		if (!--this.importing)
+			callback(null, this.ast)
+	}, this)
 }
