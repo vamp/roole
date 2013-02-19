@@ -1,7 +1,7 @@
 /**
  * Roole
  *
- * This module exposes public APIs.
+ * Expose public APIs.
  */
 'use strict'
 
@@ -27,11 +27,11 @@ roole.compile = function(input, options, callback) {
 		options = {}
 	}
 
-	if (options.showInput) {
+	if (options.prettyError) {
 		var _callback = callback
 		callback = function(error, ast) {
 			if (error && error.line) {
-				if (error.filePath)
+				if (error.filePath && options.imports)
 					input = options.imports[error.filePath]
 
 				error.message = formatter.format(error, input)

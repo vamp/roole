@@ -405,7 +405,7 @@ assignment
 
 variable
 	= '$' value:rawIdentifier {
-		return N('variable', [value.toLowerCase()])
+		return N('variable', [value])
 	}
 
 media

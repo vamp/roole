@@ -1,7 +1,7 @@
 /**
  * Generated Parser
  *
- * This module parses the input code
+ * Parse the input code.
  */
 'use strict'
 
@@ -4585,7 +4585,7 @@ var generatedParser = module.exports = (function(){
         if (r0 !== null) {
           reportedPos = r1;
           r0 = (function(value) {
-        		return N('variable', [value.toLowerCase()])
+        		return N('variable', [value])
         	})(r4);
         }
         if (r0 === null) {
