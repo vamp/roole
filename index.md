@@ -157,7 +157,7 @@ roole.compile(input, options, callback)
 
 	*	`indent` (default: `"\t"`) - string used for indentations when generating CSS
 
-	*	`percision` (default: `3`) - max number of digits to used for decimal numbers when generating CSS
+	*	`precision` (default: `3`) - max number of digits to used for decimal numbers when generating CSS
 
 	*	`prefix` (default: `["o", "ms", "moz", "webkit"]`) - vendor names to use when prefixing rules, use `[]` or `null` to disable prefixing
 
