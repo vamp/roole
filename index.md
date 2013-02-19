@@ -137,17 +137,13 @@ Link to an external file:
 <link rel="stylesheet/roole" href="styles.roo">
 ```
 
-INFO: Will be implemented in a future version
-
 Or embed code directly:
 
 ```html
-<style type="stylesheet/roole">
+<style type="text/roole">
 	// put code here
 </style>
 ```
-
-INFO: Will be implemented in a future version
 
 ### JavaScript API
 
