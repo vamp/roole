@@ -31,7 +31,7 @@ dist/roole.js: roole/dist/roole.js | dist
 dist/roole.min.js: roole/dist/roole.min.js | dist
 	cp -f $< $@
 
-LATEST_TAG = $(shell git describe master)
+LATEST_TAG = $(shell git describe --abbrev=0 master)
 roole:
 	git merge -s subtree $(LATEST_TAG) -m 'subtree merge latest tag into roole folder'
 
