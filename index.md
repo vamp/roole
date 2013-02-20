@@ -1152,7 +1152,7 @@ $width = 200px
 
 <hr>
 
-Variables defined in an imported file is exposed to the importing file:
+Variables defined in an imported file are exposed to the importing file:
 
 ```roole
 // vars.roo
