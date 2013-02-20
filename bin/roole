@@ -15,6 +15,7 @@ var usage = [
 	'    -o, --out <dir>  Write compiled files to <dir>',
 	'    -w, --watch      Watch files and re-compile if changed',
 	'    -f, --force      Create files even when compile to empty string',
+	'    -s, --silent     Display compilation errors and do not close application',
 	'    -v, --version    Display the version number',
 	'    -h, --help       Display this help message',
 ].join('\n')
