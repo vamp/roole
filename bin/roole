@@ -50,6 +50,10 @@ while (args.length) {
 	case '--force':
 		options.force = true
 		break
+	case '-s':
+	case '--silent':
+		options.silent = true
+		break
 	default:
 		filePaths.push(arg)
 	}
@@ -145,8 +149,12 @@ function compileFile(filePath, callback) {
 		prettyError: true,
 		filePath: filePath
 	}, function(error, css) {
-		if (error)
-			throw error
+		if (error){
+			if(!options.silent)
+				throw error
+			else
+				console.error(error.message)
+		}
 
 		var outputFilePath = filePath.replace(/\.roo$|$/, '.css')
 		if (options.out) {
